@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="bg-white p-6 rounded shadow-md w-96">
+  <form @submit.prevent="handleSubmit" class="bg-white p-6 rounded shadow-md max-w-96 w-full ">
     <h2 class="text-xl font-semibold text-center mb-4">
       {{ mode === "register" ? "Register" : "Login" }}
     </h2>

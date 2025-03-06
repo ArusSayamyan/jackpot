@@ -1,6 +1,6 @@
 <template>
   <main-wrapper>
-    <auth-form mode="register" :errorMessage="errorMessage" @submit="register" />
+    <auth-form mode="register" :errorMessage="errorMessage" @submit="registerUser" />
   </main-wrapper>
 </template>
 
@@ -9,36 +9,30 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import MainWrapper from "~/components/mainWrapper/MainWrapper.vue";
 import AuthForm from "~/components/form/AuthForm.vue";
+import { register, verify } from "~/api/services/auth.js";
 
 const router = useRouter();
 const errorMessage = ref("");
 
-const register = async ({ phone, password, confirmPassword }) => {
+const registerUser = async ({ phone, password, confirmPassword }) => {
   try {
     if (password !== confirmPassword) {
       errorMessage.value = "Passwords do not match!";
       return;
     }
-
-    const response = await $fetch("https://stagingnew.slotpesa.co.tz/api/v1/auth/register", {
-      method: "POST",
-      body: { phone, password, confirmPassword },
-    });
+    const response = await register({ phone, password, confirmPassword })
 
     if (response.token && response.code) {
-      await verify(response.token, response.code)
+      await verifyUser(response.token, response.code)
     }
   } catch (error) {
     errorMessage.value = "Registration failed!";
   }
 };
 
-const verify = async (token, code) => {
+const verifyUser = async (token, code) => {
   try {
-    const response = await $fetch("https://stagingnew.slotpesa.co.tz/api/v1/auth/verifyRegistration", {
-      method: "POST",
-      body: { token, code: code },
-    });
+    const response = await verify({ token, code: code })
 
     if (response.accessToken) {
       useCookie("accessToken").value = response.accessToken;
