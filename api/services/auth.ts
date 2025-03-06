@@ -8,14 +8,14 @@ export const register = async (registerData: AuthData):Promise<RegisterResponseD
     })
 };
 
-export const verify = async (verifyData: RegisterResponseData) => {
+export const verify = async (verifyData: RegisterResponseData):Promise<{accessToken: string}> => {
     return useApi('api/v1/Auth/VerifyRegistration', {
         method: "POST",
         body: verifyData,
     })
 }
 
-export const login = async (loginData: AuthData):Promise<RegisterResponseData> => {
+export const login = async (loginData: AuthData):Promise<{accessToken: string}> => {
     return useApi('api/v1/auth/login', {
         method: "POST",
         body: loginData,

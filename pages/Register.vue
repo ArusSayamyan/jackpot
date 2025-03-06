@@ -4,12 +4,10 @@
   </main-wrapper>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import MainWrapper from "~/components/mainWrapper/MainWrapper.vue";
-import AuthForm from "~/components/form/AuthForm.vue";
-import { register, verify } from "~/api/services/auth.js";
+import { register, verify } from "~/api/services/auth";
 
 const router = useRouter();
 const errorMessage = ref("");
