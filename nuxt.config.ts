@@ -2,7 +2,14 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-
+  veeValidate: {
+    autoImports: true,
+    componentNames: {
+      Form: 'VeeForm',
+      Field: 'VeeField',
+      ErrorMessage: 'VeeErrorMessage',
+    },
+  },
   typescript: {
     typeCheck: true,
     strict: false
