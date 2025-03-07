@@ -1,5 +1,5 @@
 import { useApi } from "~/composables/useApi";
-import type { AuthData, RegisterResponseData } from "~/api/types";
+import type { AuthData, RegisterResponseData, UserData } from "~/api/types";
 
 export const register = async (registerData: AuthData):Promise<RegisterResponseData> => {
     return useApi('api/v1/auth/register', {
@@ -22,7 +22,7 @@ export const login = async (loginData: AuthData):Promise<{accessToken: string}> 
     })
 }
 
-export const getUser = async (accessToken: string) => {
+export const getUser = async (accessToken: string):Promise<UserData> => {
     return useApi('api/v1/user/get', {
         headers: { "Access-Token": accessToken },
     })
