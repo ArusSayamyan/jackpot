@@ -4,15 +4,16 @@
       {{ mode === "register" ? "Register" : "Login" }}
     </h2>
 
-    <input v-model="phone" type="text" placeholder="Phone (255XXXXXXXXX)" class="w-full p-2 mb-2 border border-gray-300 rounded-md" />
-    <input v-model="password" type="password" placeholder="Password" class="w-full p-2 mb-2 border border-gray-300 rounded-md" />
+    <input v-model="phone" type="text" autocomplete="off" placeholder="Phone (255XXXXXXXXX)" class="w-full p-2 mb-2 border border-gray-300 rounded-md outline-none" />
+    <input v-model="password" autocomplete="off" type="password" placeholder="Password" class="w-full p-2 mb-2 border border-gray-300 rounded-md outline-none" />
 
     <input
         v-if="mode === 'register'"
         v-model="confirmPassword"
         type="password"
         placeholder="Confirm Password"
-        class="w-full p-2 mb-2 border border-gray-300 rounded-md"
+        class="w-full p-2 mb-2 border border-gray-300 rounded-md outline-none"
+        autocomplete="off"
     />
 
     <button class="w-full p-3 bg-indigo-600 text-white rounded-md cursor-pointer hover:bg-indigo-700 transition">
@@ -34,7 +35,7 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 
 const props = defineProps({

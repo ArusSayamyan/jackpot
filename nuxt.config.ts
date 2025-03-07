@@ -7,12 +7,12 @@ export default defineNuxtConfig({
     typeCheck: true,
     strict: false
   },
-
+  components: true,
   runtimeConfig: {
     public: {
       API_BASE_URL: process.env.NUXT_PUBLIC_API_BASE_URL,
     },
   },
 
-  modules: ['@nuxtjs/tailwindcss']
+  modules: ['@nuxtjs/tailwindcss', '@vee-validate/nuxt']
 });

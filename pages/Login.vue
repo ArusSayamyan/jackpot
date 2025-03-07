@@ -8,8 +8,6 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCookie } from "#app";
-import MainWrapper from "~/components/mainWrapper/MainWrapper.vue";
-import AuthForm from "~/components/form/AuthForm.vue";
 import { login } from "~/api/services/auth.ts";
 
 const router = useRouter();
