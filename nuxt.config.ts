@@ -21,7 +21,10 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxtjs/tailwindcss', '@vee-validate/nuxt', '@pinia/nuxt'],
+  modules: ['@vee-validate/nuxt', '@pinia/nuxt', '@nuxt/ui'],
+  ui: {
+    global: true
+  },
   pinia: {
     storesDirs: ['./stores/**'],
   },
