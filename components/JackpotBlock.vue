@@ -1,16 +1,19 @@
 <template>
-  <div class="max-w-[244px] h-[51px] bg-[#0E172B] rounded-[12px] w-full  border-2 border-cyan-400 my-0 mx-auto flex justify-center items-end">
-    <div class="flex flex-col text-white text-center h-[65px] font-extrabold">
-      <span class="text-[18px]">Jackpot</span>
-      <span class="text-[18px]">{{ jackpot }}</span>
-    </div>
+  <div
+    class="relative border-cyan-400 border-2 max-w-[244px] bg-[#0E172B] py-3 rounded-xl w-full mx-auto flex justify-center z-1"
+  >
+    <p
+      class="text-lg absolute -top-4 left-1/2 transform -translate-x-1/2 px-2 text-white"
+    >
+      Jackpot
+    </p>
+
+    <span class="text-lg text-white">{{ jackpot }}</span>
   </div>
 </template>
+
 <script setup lang="ts">
-defineProps({
-  jackpot: {
-    type: String,
-    default: ""
-  }
-})
+defineProps<{
+  jackpot?: string
+}>()
 </script>

@@ -1,78 +1,120 @@
 <template>
-  <div class="h-full w-full bg-white my-0 mx-auto">
+  <div class="h-full w-full bg-white mx-auto">
     <main-wrapper class="w-full h-full">
       <div class="h-full flex flex-col gap-10 max-w-[520px] w-full py-5">
-
-        <!--        HEADER-->
         <Header @logout="logout"/>
 
-        <!--        JACKPOT BUTTON-->
         <JackpotBlock :jackpot="'984874982'"/>
 
-        <!--        COIN BLOCK-->
-        <div class="flex justify-between ">
-          <div class="flex flex-col gap-[25px] h-fit">
-            <CoinItem :coin-image="lion"/>
-            <CoinItem :coin-image="buffalo"/>
-            <CoinItem :coin-image="lion"/>
-            <CoinItem :coin-image="buffalo"/>
-            <CoinItem :coin-image="lion"/>
+        <div class="flex justify-between">
+          <div class="flex flex-col gap-[25px]">
+            <template v-for="(coin, index) in coinSequence" :key="index">
+              <CoinItem :coin-image="coin"/>
+            </template>
           </div>
-          <div class="w-[330px] h-[330px] relative" :class="{ animate: isSpinning }">
-            <img :src="lion" alt="lion" class="w-full h-full heads face" :style="{transform: headsStyle}">
-            <img :src="buffalo" alt="buffalo" class="w-full h-full tails face" :style="{transform: tailsStyle}">
+          <div
+              class="w-[330px] h-[330px] relative"
+              :class="{ animate: isSpinning }"
+          >
+            <img
+                :src="lion"
+                alt="lion"
+                class="w-full h-full buffalo face"
+                :style="{ transform: headsStyle }"
+            />
+            <img
+                :src="buffalo"
+                alt="buffalo"
+                class="w-full h-full lion face"
+                :style="{ transform: tailsStyle }"
+            />
           </div>
           <div>
-            <img :src="steps" alt="steps" class="h-[330px]">
+            <img :src="steps" alt="steps" class="h-[330px]"/>
           </div>
         </div>
 
-        <!--        BUTTONS BLOCK-->
-        <div v-if="selectedCoin && !time">
-          <GameResult :gameResult="gameResult" :selectedCoin="selectedCoin"/>
-        </div>
+        <GameResult
+            v-if="selectedCoin && !time"
+            :gameResult="gameResult"
+            :selectedCoin="selectedCoin"
+        />
 
-        <!--        TIME BLOCK-->
         <div v-else class="flex flex-col">
-          <div class="mx-auto max-w-[300px] w-full mt-0 mb-8">
-            <p v-if="!!timeLeft" class="text-white text-[27px] text-center">Game starts in {{ formattedTime }}</p>
-            <UProgress animation="carousel" :value="time" :max="5" color="blue" class="mt-3 w-full"/>
+          <div class="mx-auto max-w-[300px] w-full mb-8">
+            <p v-if="timeLeft" class="text-white text-[27px] text-center">
+              Game starts in {{ formattedTime }}
+            </p>
+
+            <UProgress :value="time" :max="5" color="blue" class="mt-3"/>
           </div>
-          <div class="w-full gap-[10px] flex mx-auto justify-between mt-0 mb-3">
-            <UButton :disabled="!time" @click="setSelectedCoin('buffalo')" size="xl" color="cyan"
-                     class="w-[255px] flex flex-col ">
-              <span class="uppercase">Buffalo</span>
-              <span class="text-black">Bet x2</span>
+          <div class="w-full gap-2.5 flex mx-auto justify-between mt-0 mb-3">
+            <UButton
+                :disabled="!time"
+                @click="setSelectedCoin('buffalo')"
+                size="xl"
+                active-class="!bg-red-500"
+                class="w-[255px] block focus:ring focus:!ring-cyan-500/50 bg-gradient-to-tr from-[#1C6BBF] to-[#26D4FF]"
+            >
+              <p class="uppercase text-white">Buffalo</p>
+
+              <p class="font-bold text-black">Bet x2</p>
             </UButton>
-            <UButton :disabled="!time" @click="setSelectedCoin('lion')" size="xl" color="yellow"
-                     class="w-[255px] flex flex-col">
-              <span class="uppercase">Lion</span>
-              <span class="text-black">Bet x2</span>
+
+            <UButton
+                :disabled="!time"
+                @click="setSelectedCoin('lion')"
+                size="xl"
+                class="w-[255px] block focus:ring focus:!ring-yellow-500/50 bg-gradient-to-tr from-[#F57100] to-[#FFD526]"
+            >
+              <p class="uppercase text-white">Lion</p>
+
+              <p class="font-bold text-black">Bet x2</p>
             </UButton>
           </div>
 
-          <!--          CONTROL BLOCK-->
-          <div class="w-auto gap-0.5 flex mx-auto my-0">
-            <UButtonGroup size="lg" class="flex gap-1" orientation="horizontal">
-              <UButton @click="updateBet('min')" class="bg-[#4D6C8B] rounded-lg flex flex-col w-[90px]">
-                <span>100</span><span>min</span></UButton>
-              <div class="flex">
-                <UButton @click="updateBet('dec')" icon="i-heroicons-minus"
-                         class="bg-[#4D6C8B] rounded-bl-lg rounded-tl-lg w-[50px] justify-center"/>
-                <div class="px-5 flex justify-center items-center text-white bg-[#25354D] w-[234px]">
+          <div class="flex mx-auto">
+            <UButtonGroup
+                size="lg"
+                class="flex gap-1"
+                orientation="horizontal"
+                :class="{ 'mb-3': timeLeft }"
+            >
+              <UButton
+                  @click="updateBet('min')"
+                  class="rounded-lg flex flex-col w-[90px] bg-gradient-to-tr from-[#274B69] to-[#4D6C8B]"
+              >
+                <span>{{ MIN_BET }}</span>
+                <span>min</span>
+              </UButton>
+              <div class="flex rounded-lg">
+                <UButton
+                    @click="updateBet('dec')"
+                    icon="i-heroicons-minus"
+                    class="rounded-bl-lg rounded-tl-lg w-[50px] justify-center bg-gradient-to-tr from-[#274B69] to-[#4D6C8B]"
+                />
+                <div
+                    class="px-5 flex justify-center items-center text-white bg-[#25354D] w-[234px]"
+                >
                   <span>Bet {{ betValue }}</span>
                 </div>
-                <UButton @click="updateBet('inc')" icon="i-heroicons-plus"
-                         class="bg-[#4D6C8B] rounded-br-lg rounded-tr-lg w-[50px] justify-center"/>
+                <UButton
+                    @click="updateBet('inc')"
+                    icon="i-heroicons-plus"
+                    class="rounded-br-lg rounded-tr-lg w-[50px] justify-center bg-gradient-to-tr from-[#274B69] to-[#4D6C8B]"
+                />
               </div>
-              <UButton @click="updateBet('max')" class="bg-[#4D6C8B] w-[90px] rounded-lg flex flex-col">
-                <span>10k</span><span>max</span></UButton>
+              <UButton
+                  @click="updateBet('max')"
+                  class="w-[90px] rounded-lg flex flex-col bg-gradient-to-tr from-[#274B69] to-[#4D6C8B]"
+              >
+                <span>{{ MAX_BET / 1000 }}k</span>
+                <span>max</span>
+              </UButton>
             </UButtonGroup>
           </div>
         </div>
 
-
-        <!--        HISTORY TABLE-->
         <HistoryTable :bet-history="betHistory" :items="items"/>
       </div>
     </main-wrapper>
@@ -80,117 +122,128 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import {
+  MIN_BET,
+  MAX_BET,
+  SPIN_DURATION,
+  RESTART_DELAY,
+  COUNTDOWN_INTERVAL,
+  INITIAL_TIME,
+  INITIAL_COUNTDOWN
+} from '~/constants/constants'
+import { useRouter } from 'vue-router'
 import lion from '~/assets/images/lion.png'
-import buffalo from '~/assets/images/buffalo.png'
 import steps from '~/assets/images/steps.png'
+import buffalo from '~/assets/images/buffalo.png'
 
-const router = useRouter();
+const router = useRouter()
 const cookie = useCookie('accessToken')
 
-const time = ref(5)
-const betValue = ref(100)
-const betHistory = ref([]);
-const timeLeft = ref(3);
-const formattedTime = ref(`00:${timeLeft.value < 10 ? '0' : ''}${timeLeft.value}`);
+const time = ref(INITIAL_TIME)
+const betValue = ref(MIN_BET)
+const betHistory = ref([])
+const timeLeft = ref(INITIAL_COUNTDOWN)
 const selectedCoin = ref(null)
-const isHeadsSelected = ref(Math.random() < 0.5);
-const isSpinning = ref(false);
+const isHeadsSelected = ref(Math.random() < 0.5)
+const isSpinning = ref(false)
 
+const formattedTime = computed(
+    () => `00:${timeLeft.value < 10 ? '0' : ''}${timeLeft.value}`
+)
 
-const items = [{
-  label: 'Live bets',
-}, {
-  label: 'History',
-}, {
-  label: 'Top 10',
-}]
+const coinSequence = [lion, buffalo, lion, buffalo, lion]
 
+const items = [
+  {label: 'Live bets'},
+  {label: 'History'},
+  {label: 'Top 10'}
+]
 
 const startCountdown = () => {
   const timer = setInterval(() => {
     if (timeLeft.value > 0) {
-      timeLeft.value--;
-      formattedTime.value = `00:${timeLeft.value < 10 ? '0' : ''}${timeLeft.value}`;
+      timeLeft.value--
     } else {
-      clearInterval(timer);
+      clearInterval(timer)
     }
-  }, 1000);
+  }, COUNTDOWN_INTERVAL)
 }
 
-const updateBet = (action) => {
-  if (action === 'min') {
-    betValue.value = 100;
-  } else if (action === 'max') {
-    betValue.value = 10000;
-  } else if (action === 'dec' && betValue.value > 100) {
-    betValue.value = Math.max(100, betValue.value - 100);
-  } else if (action === 'inc' && betValue.value < 10000) {
-    betValue.value = Math.min(10000, betValue.value + 100);
+const updateBet = (action: string) => {
+  const actions = {
+    min: () => MIN_BET,
+    max: () => MAX_BET,
+    dec: () => Math.max(MIN_BET, betValue.value - 100),
+    inc: () => Math.min(MAX_BET, betValue.value + 100)
+  }
+
+  if (action in actions) {
+    betValue.value = actions[action]()
   }
 }
 
-const setSelectedCoin = (value) => {
+const setSelectedCoin = (value: string) => {
   selectedCoin.value = value
 }
 
-const gameResult = computed(() => {
-  return isHeadsSelected.value && selectedCoin.value === 'lion' || !isHeadsSelected.value && selectedCoin.value === 'buffalo'
-})
+const gameResult = computed(
+    () =>
+        (isHeadsSelected.value && selectedCoin.value === 'lion') ||
+        (!isHeadsSelected.value && selectedCoin.value === 'buffalo')
+)
 
-const headsStyle = computed(() => {
-  return  isHeadsSelected.value ? 'rotateY(0deg)' : 'rotateY(180deg)'
-});
+const headsStyle = computed(
+    () => `rotateY(${isHeadsSelected.value ? 0 : 180}deg)`
+)
 
-const tailsStyle = computed(() => {
-  return isHeadsSelected.value ? 'rotateY(180deg)' : 'rotateY(0deg)'
-});
+const tailsStyle = computed(
+    () => `rotateY(${isHeadsSelected.value ? 180 : 0}deg)`
+)
 
 const spinCoin = () => {
-  isSpinning.value = true;
-  time.value = 5;
+  isSpinning.value = true
+  time.value = INITIAL_TIME
+
   const interval = setInterval(() => {
     if (time.value > 0) {
-      time.value -= 1;
+      time.value -= 1
     } else {
-      clearInterval(interval);
+      clearInterval(interval)
       if (selectedCoin.value) {
         betHistory.value.push({
           id: Date.now(),
           date: new Date().toLocaleString(),
           stake: '0.2',
-          status: gameResult.value ? '0.2' : "LOST",
-          pick: selectedCoin.value.toUpperCase(),
+          status: gameResult.value ? '0.2' : 'LOST',
+          pick: selectedCoin.value.toUpperCase()
         })
       }
       selectedCoin.value = null
-      betValue.value = 100
+      betValue.value = MIN_BET
     }
-  }, 1000);
+  }, COUNTDOWN_INTERVAL)
+
   setTimeout(() => {
-    isSpinning.value = false;
-    isHeadsSelected.value = Math.random() < 0.5;
-    setTimeout(spinCoin, 3000); // Restart spin
-  }, 5000);
+    isSpinning.value = false
+    isHeadsSelected.value = Math.random() < 0.5
+    setTimeout(spinCoin, RESTART_DELAY)
+  }, SPIN_DURATION)
 }
 
 const logout = () => {
-  cookie.value = null;
-  router.push('/login');
+  cookie.value = null
+  router.push('/login')
 }
 
 watch(timeLeft, (newValue) => {
   if (newValue === 0) {
-    spinCoin();
+    spinCoin()
   }
-});
+})
 
-
-onMounted(() => {
-  startCountdown()
-});
-
+onMounted(startCountdown)
 </script>
+
 <style scoped>
 @keyframes rotation {
   0% {
@@ -205,14 +258,10 @@ onMounted(() => {
 }
 
 .animate {
-  animation-name: rotation;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  animation-duration: 1s;
+  animation: rotation 0.5s linear infinite;
   transform: rotateY(0deg);
   transform-style: preserve-3d;
 }
-
 
 .face {
   position: absolute;
@@ -221,12 +270,11 @@ onMounted(() => {
   backface-visibility: hidden;
 }
 
-.heads {
+.lion {
   transform: rotateY(0deg);
 }
 
-.tails {
+.buffalo {
   transform: rotateY(180deg);
 }
-
 </style>

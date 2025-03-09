@@ -1,9 +1,11 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
+  const accessToken = useCookie('accessToken').value
+  const publicRoutes = ['/login', '/register']
+
+  if (accessToken) {
     const userStore = useUserStore()
-    const accessToken = useCookie('accessToken').value
-    if (accessToken) {
-        await userStore.setUserdata(accessToken)
-    } else if (!accessToken && to.path !== '/login' && to.path !== '/register') {
-        return navigateTo('/login')
-    }
+    await userStore.setUserdata(accessToken)
+  } else if (!publicRoutes.includes(to.path)) {
+    return navigateTo('/login')
+  }
 })
