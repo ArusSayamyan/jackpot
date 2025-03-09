@@ -1,25 +1,24 @@
 <template>
-  <main-wrapper>
+  <main-wrapper class="h-screen">
     <template #images>
-      <img src="~/assets/images/lion.png" class="absolute left-0 top-0 w-[35%] opacity-20">
-      <img src="~/assets/images/buffalo.png" class="absolute right-0 top-0 w-[35%] scale-x-[-1] opacity-20">
+      <img :src="lion" class="absolute left-0 top-0 w-[35%] opacity-20">
+      <img :src="buffalo" class="absolute right-0 top-0 w-[35%] scale-x-[-1] opacity-20">
     </template>
-    <auth-form mode="register" :errorMessage="errorMessage" @submit="registerUser" />
+    <auth-form mode="register" @submit="registerUser" />
   </main-wrapper>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { register, verify } from "~/api/services/auth";
-
+import lion from '~/assets/images/lion.png'
+import buffalo from '~/assets/images/buffalo.png'
 const router = useRouter();
-const errorMessage = ref("");
+const toast = useToast()
 
 const registerUser = async ({ phone, password, confirmPassword }) => {
   try {
     if (password !== confirmPassword) {
-      errorMessage.value = "Passwords do not match!";
       return;
     }
     const response = await register({ phone, password, confirmPassword })
@@ -28,7 +27,12 @@ const registerUser = async ({ phone, password, confirmPassword }) => {
       await verifyUser(response.token, response.code)
     }
   } catch (error) {
-    errorMessage.value = "Registration failed!";
+    toast.add({
+      id: 'register_error',
+      title: 'Oooops(',
+      description: error.response._data?.errMsg,
+      timeout: 0,
+    })
   }
 };
 
@@ -41,7 +45,7 @@ const verifyUser = async (token, code) => {
       router.push("/");
     }
   } catch (error) {
-    errorMessage.value = "Verification failed!";
+    console.log(error)
   }
 };
 </script>

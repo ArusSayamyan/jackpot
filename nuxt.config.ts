@@ -23,7 +23,7 @@ export default defineNuxtConfig({
 
   modules: ['@vee-validate/nuxt', '@pinia/nuxt', '@nuxt/ui'],
   ui: {
-    global: true
+    global: true,
   },
   pinia: {
     storesDirs: ['./stores/**'],
